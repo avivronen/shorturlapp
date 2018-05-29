@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Short.Arps.Co.Il</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div style="text-align:center">
+    <h1>
+        Welcome
+    </h1>
+    <img width="300" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png">
+</div>
+
+<div class="container">
+    <form class="form-url" id="form-url" name="form-url">
+        <h2 class="form-url-heading">Create Short Link</h2>
+        <label for="fUrl" class="sr-only">Url</label>
+        <input type="url" id="fUrl" name="fUrl" class="form-control" placeholder="http://" required autofocus>
+        <br />
+        <input type="submit" class="btn btn-lg btn-primary btn-block" value="Generate!" />
+    </form>
+    <div id="result" name="result"></div>
+</div> <!-- /container -->
+
+<script>
+    $(document).ready(function() {
+
+        var api_url = "http://webserviceurl.com/index.php/api-version1/links";
+        var base_url = "http://shorter.bi";
+        $( "#form-url" ).submit(function( event ) {
+            $(":submit").attr('disabled', 'disabled');
+            fUrl = $("#fUrl").val();
+            console.log(fUrl);
+            createShortLink(fUrl);
+            event.preventDefault();
+            $(":submit").removeAttr("disabled");
+            res = null;
+            fUrl = null;
+            shortUrl = null;
+            return false;
+        });
+
+        function createShortLink(fUrl) {
+            //console.log(api_url);
+            $.post( api_url, { url: fUrl })
+                .done(function( data ) {
+                    shortUrl = base_url + '/' + data;
+                    $( "#result" ).html( '<div class="alert alert-success"><b>Success!</b> Your Short Link is: <a href="'+shortUrl+'" target="_blank">' + shortUrl + '</a></div>' );
+                },
+           );
+        }
+
+        $(document).ajaxError(function( event, jqxhr, settings, thrownError ) {
+            $( "#result" ).html( '<div class="alert alert-danger"> <b>Error</b> Creating Short Link </div>' );
+           return false;
+        });
+    });
+</script>
+</body>
+</html>
